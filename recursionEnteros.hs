@@ -82,6 +82,76 @@ esPar n = esDivisible n 2
 ------------------------- EJERCICIOS DE PARCIAL --------------------------------------------
 
 ---EJERCICIO 1.0---
+{---
+Problema: hayPrimosGemelos Dos números p1 y p2 son primos gemelos si 
+    -ambos son primos
+    -|p_2 - p_1| = 2
+    
+    hayPrimosGemelos :: Integer -> Integer -> Bool
+        -- requiere: { 0 < d <= h }
+            -- asegura: { res = True <-> existen dos números p1 y p2 en el rango [d..h] que son primos gemelos }
+---}
+menorDivisorDesde2 :: Integer -> Integer -> Integer
+menorDivisorDesde2 n i | mod n i == 0 = i 
+                      | otherwise = menorDivisorDesde2 n (i+1)
 
-generarSecuencia :: Integer -> Integer -> Integer
-generarSecuencia d h 
+menorDivisor2 :: Integer -> Integer
+menorDivisor2 n = menorDivisorDesde2 n 2
+
+esPrimo2 :: Integer -> Bool
+esPrimo2 n = (n > 1) && (menorDivisor2 n == n)
+
+absoluto :: Integer -> Integer
+absoluto n | n < 0 = -n
+           | otherwise = n
+
+sonPrimosGemelos :: Integer -> Integer -> Bool
+sonPrimosGemelos p1 p2 = (esPrimo2 p1 == True) && (esPrimo2 p2 == True) && (absoluto(p1 - p2) == 2)
+
+
+hayPrimosGemelos :: Integer -> Integer -> Bool
+hayPrimosGemelos d h | (d+2) > h = False -- si se pasa del rango 
+                     | sonPrimosGemelos d (d+2)= True
+                     | otherwise = hayPrimosGemelos (d+1) h
+
+
+---EJERCICIO 2---
+
+saturarUmbralHastaNegativo :: [Integer] -> Integer -> [Integer]
+saturarUmbralHastaNegativo [] _ = []
+saturarUmbralHastaNegativo (x:xs) n
+    | x < 0  = []
+    | (x >= 0) && (x <= n) = x : saturarUmbralHastaNegativo xs n 
+    | (x >= 0) && (x > n) = n : saturarUmbralHastaNegativo xs n 
+    | otherwise = saturarUmbralHastaNegativo xs n
+
+
+
+----EJERCICIO 3------
+
+{--
+
+```
+problema materiasTurnoTarde (cursadas: seq⟨String x String x Z x Z⟩) : seq⟨String⟩ {
+  requiere: { Para toda tupla (materia, dia, inicio, fin) en cursadas: 0 <= inicio < fin <= 24 }
+  asegura: { res no contiene elementos repetidos }
+  asegura: { Un String m pertenece a res <=> 
+    -existe alguna tupla (materia, dia, inicio, fin) en cursadas tal que: 
+        -materia == m y 
+        -el intervalo de cursada [inicio, fin] se superpone con el rango de la tarde [14, 17] 
+            (es decir, inicio < 17 y fin > 14) }
+}
+
+materiasTurnoTarde :: [(String, String, Integer, Integer)] -&gt; [String]
+
+--}
+
+esHorarioTarde :: Integer -> Integer -> Bool
+esHorarioTarde inicio fin = (inicio < 17) && (fin > 14)
+
+pertenece :: String -> [String] -> Bool
+pertenece _ [] = False
+pertenece m (x:xs)
+    | m == x = True
+    | otherwise = pertenece m xs
+
