@@ -93,7 +93,7 @@ Problema: hayPrimosGemelos Dos números p1 y p2 son primos gemelos si
 ---}
 menorDivisorDesde2 :: Integer -> Integer -> Integer
 menorDivisorDesde2 n i | mod n i == 0 = i 
-                      | otherwise = menorDivisorDesde2 n (i+1)
+                       | otherwise = menorDivisorDesde2 n (i+1)
 
 menorDivisor2 :: Integer -> Integer
 menorDivisor2 n = menorDivisorDesde2 n 2
@@ -155,3 +155,88 @@ pertenece m (x:xs)
     | m == x = True
     | otherwise = pertenece m xs
 
+eliminarRepetidos :: [String] -> [String]
+eliminarRepetidos [] = []
+eliminarRepetidos (x:xs) 
+    | not (pertenece x xs) = x : eliminarRepetidos xs
+    | otherwise = eliminarRepetidos xs
+
+
+--------------------USAR ESTA, ES MEJOR, EL ALGORITMO ES MEJOR DE ENTENDER----------------------------
+esPrimoAux :: Integer -> Integer -> Integer -> Bool
+esPrimoAux n d h 
+    | d == h = True
+    | n `mod` d == 0 = False
+    | otherwise = esPrimoAux n (d+1) h
+
+esPrimo3 :: Integer -> Bool
+esPrimo3 n = esPrimoAux n 2 n
+----------------------------------------------------------------------------------------------------
+-- ejercicios de Teórica en grupo--
+
+-- EJERCICIO 1 -- 
+
+mismaTemporada :: [([Char], Integer)] -> Integer -> [[Char]]
+mismaTemporada [] _ = []
+mismaTemporada((s,t):xs) n
+    | t == n = s : mismaTemporada xs n
+    | otherwise = mismaTemporada xs n
+
+quitarTemporada :: Integer ->[([Char], Integer)] -> [([Char], Integer)]
+quitarTemporada _ [] = []
+quitarTemporada n ((s,t):xs)
+    | t == n = quitarTemporada n xs
+    | otherwise = (s,t) : quitarTemporada n xs
+
+agruparPorCantidadDeTemporadas :: [([Char], Integer)] -> [(Integer, [[Char]])]
+agruparPorCantidadDeTemporadas [] = []
+agruparPorCantidadDeTemporadas((s,t):xs) = (t, mismaTemporada ((s,t):xs) t) : agruparPorCantidadDeTemporadas (quitarTemporada t xs)
+
+-- EJERCICIO 2 -- 
+sumaCuadradosPares :: Integer -> Integer
+sumaCuadradosPares n
+    | n == 1 = 0
+    | (n `mod` 2 == 0) = (n^2) + sumaCuadradosPares (n-1)
+    | otherwise = sumaCuadradosPares (n-1)
+
+----------------------------------------------------------------------------------------------------
+
+
+-----------RECUPERATORIO 2C- 2025-------------------------
+-- ejercicio 4--
+
+perteneceCaracter :: Char -> [Char] -> Bool
+perteneceCaracter _ [] = False
+perteneceCaracter c (x:xs)
+    | c == x = True
+    | otherwise = perteneceCaracter c xs
+
+eliminarCaracteresRepetidos :: [Char] -> [Char]
+eliminarCaracteresRepetidos [] = []
+eliminarCaracteresRepetidos (x:xs)
+    | (perteneceCaracter x xs) = eliminarCaracteresRepetidos xs
+    | otherwise                = x : eliminarCaracteresRepetidos xs
+
+
+contarCoincidencias :: [Char] -> [Char] -> [Char]
+contarCoincidencias [] _ = []
+contarCoincidencias (x:xs) s2
+    | perteneceCaracter x s2 = x : contarCoincidencias xs s2
+    | otherwise              = contarCoincidencias xs s2
+
+
+caracteresEnComun :: [Char] -> [Char] -> [Char]
+caracteresEnComun [] _ = []
+caracteresEnComun (x:xs) p2 
+    | perteneceCaracter x p2  =  eliminarCaracteresRepetidos(x : caracteresEnComun xs p2)
+    | otherwise               = caracteresEnComun xs p2
+
+
+-------------------------------------MATRICES----------------------------------------------------------------------------------------------------
+
+maximo :: [Integer] -> Integer
+maximo [] = 0
+maximo [x] = x
+maximo (x::yxs) 
+    | x >= y = x
+    | otherwise = maximo xs
