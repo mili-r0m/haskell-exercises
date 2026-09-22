@@ -237,6 +237,14 @@ caracteresEnComun (x:xs) p2
 maximo :: [Integer] -> Integer
 maximo [] = 0
 maximo [x] = x
-maximo (x::yxs) 
-    | x >= y = x
-    | otherwise = maximo xs
+maximo (x:y:xs) 
+    | x >= y = maximo (x:xs)
+    | otherwise = maximo (y:xs)
+
+posicion :: Integer -> [Integer] -> Integer
+posicion _ [] = 0
+posicion 0 (x:_) = x
+posicion n ((x:xs)x:xs) = posicion (n-1) xs
+
+maximoEnLaFila :: [[Integer]] -> Integer -> Integer
+maximoEnLaFila [] _ = 0
