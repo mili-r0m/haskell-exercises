@@ -244,7 +244,260 @@ maximo (x:y:xs)
 posicion :: Integer -> [Integer] -> Integer
 posicion _ [] = 0
 posicion 0 (x:_) = x
-posicion n ((x:xs)x:xs) = posicion (n-1) xs
 
 maximoEnLaFila :: [[Integer]] -> Integer -> Integer
 maximoEnLaFila [] _ = 0
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------ultimos ejercicios pre parcial---------------------------------------------------------------------------------------------
+
+-------------------------- recursion sobre enteros ------------------------------------
+
+---- ejercicio 1 ----
+
+{--
+NOTAS IMPORTANTEESSS!!!!!!
+
+-)  div n 10 -> le saca el último digito a n
+    div 1234 10 => 123
+-)  mod n 10 -> muestra el últmo dígito de n 
+    mod 1234 10 => 4
+--}
+
+
+sumaDigitosPares :: Integer -> Integer
+sumaDigitosPares 0 = 0
+sumaDigitosPares n 
+    | (n < 10) && (mod n 2 == 0) = n
+    | n < 10  = 0
+    | otherwise = sumaDigitosPares(mod n 10) + sumaDigitosPares(div n 10)
+
+---- ejercicio 2 ----
+
+divisoresDeNdesde :: Integer -> Integer -> Integer -> [Integer]
+divisoresDeNdesde 0 _ _ = []
+divisoresDeNdesde n d h 
+    | d > h = []
+    | mod n d == 0 = d : divisoresDeNdesde n (d+1) h
+    | otherwise = divisoresDeNdesde n (d+1) h
+
+divisoresPropiosDeN :: Integer -> [Integer]
+divisoresPropiosDeN n = divisoresDeNdesde n 1 (n-1)
+
+suma :: [Integer] -> Integer
+suma [] = 0
+suma (x:xs) = x + suma xs
+
+sumaDivisoresPropios :: Integer -> Integer
+sumaDivisoresPropios n = suma (divisoresPropiosDeN n)
+
+esPar3 :: Integer -> Bool
+esPar3 x = mod x 2 == 0
+
+hayNumeroConSumaDivisoresPar :: Integer -> Integer -> Bool
+hayNumeroConSumaDivisoresPar d h 
+    | d > h = False    ------si se va del rango corta la recursión
+    | esPar3 (sumaDivisoresPropios d) = True
+    | otherwise = hayNumeroConSumaDivisoresPar (d+1) h
+
+
+
+-------------------------- cadena de char o strings ------------------------------------
+
+---- ejercicio 1 ----
+
+esVocal :: Char -> Bool
+esVocal x
+    | x == 'a' = True
+    | x == 'e' = True
+    | x == 'i' = True
+    | x == 'o' = True
+    | x == 'u' = True
+    | otherwise = False
+
+contarConsonantes :: [Char] -> Integer
+contarConsonantes [] = 0
+contarConsonantes (x:xs)
+    | esVocal x == True = 0 + contarConsonantes xs
+    | otherwise = 1 + contarConsonantes xs
+
+---- ejercicio 2 ----
+longitud :: [Char] -> Integer
+longitud [] = 0
+longitud (x:xs) = 1 + longitud xs
+
+
+quitarBlancos :: [Char] -> [Char]
+quitarBlancos [] = []
+quitarBlancos (x:xs)
+    | x /= ' ' = x : quitarBlancos xs
+    | otherwise = quitarBlancos xs
+
+
+contarApariciones :: Char -> [Char] -> Integer
+contarApariciones _ [] = 0
+contarApariciones c (x:xs)
+    | c == x = 1 + contarApariciones c xs
+    | otherwise = contarApariciones c xs
+
+mismaFrecuenciaSinEspacios :: [Char] -> [Char] -> Bool
+mismaFrecuenciaSinEspacios [] [] = False
+mismaFrecuenciaSinEspacios (x:xs) (y:ys)
+    | (contarApariciones x xs) == (contarApariciones y ys) = True
+    | otherwise = mismaFrecuenciaSinEspacios xs ys
+
+------------ corregir, está mal
+
+
+
+
+
+-------------------------- matrices uwu ------------------------------------
+
+---- ejercicio 1 ----
+
+
+todosPositivos :: [Integer] -> Bool
+todosPositivos [] = True
+todosPositivos (x:xs)
+    | x < 0 = False
+    | x > 0 = todosPositivos xs
+    | otherwise = todosPositivos xs
+
+
+posicion2 :: Integer -> [Integer] -> Integer
+posicion2 _ [] = 0
+posicion2 n (x:xs) 
+    | n == 1 = x
+    | otherwise = posicion2 (n-1) xs
+    
+
+iesimaColumna :: Integer -> [[Integer]] -> [Integer]
+iesimaColumna _ [] = []
+iesimaColumna col (x:xs) = posicion2 col x : iesimaColumna col xs
+
+esColumnaPositiva :: [[Integer]] -> Integer -> Bool
+esColumnaPositiva [] _ = True
+esColumnaPositiva (x:xs) col = todosPositivos(iesimaColumna col (x:xs))
+
+
+---- ejercicio 2 ---- 
+
+
+-------------------------- Listas y tuplas------------------------------------
+
+---- ejercicio 1 ----
+
+longitud2 :: [Integer] -> Integer
+longitud2 [] = 0
+longitud2 (x:xs) = 1 + longitud2 xs
+
+promedio :: [Integer] -> Float
+promedio [] = 0.0
+promedio (x:xs) = fromIntegral(suma (x:xs)) / fromIntegral(longitud2 (x:xs))
+
+
+sonMayoresAn :: [Integer] -> Integer -> Bool
+sonMayoresAn [] _ = True
+sonMayoresAn (x:xs) n
+    | x >= n = sonMayoresAn xs n
+    | otherwise = False
+
+
+esBuenAlumno :: [Integer] -> Bool 
+esBuenAlumno [] = False
+esBuenAlumno notas = sonMayoresAn notas 4 && promedio notas >= 7.0 
+
+
+buenosAlumnos :: [(String, [Integer] ) ] -> [String]
+buenosAlumnos [] = []
+buenosAlumnos ((alum,notas):xs) 
+    |esBuenAlumno notas = alum : buenosAlumnos xs
+    | otherwise = buenosAlumnos xs
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+--- recu 2C 2025 ---
+
+--- ejercicio 1 ---
+
+esDivisor :: Integer -> Integer -> Bool
+esDivisor 0 0 = False
+esDivisor a b   
+    | a `mod` b == 0 = True
+    | otherwise = False
+
+divisoresPropiosAux :: Integer -> Integer -> Integer -> [Integer]
+divisoresPropiosAux 0 _ _ = []
+divisoresPropiosAux n d h 
+    | d > h = []
+    | d == h && (esDivisor n h == True) = d : divisoresPropiosAux n d h
+    | d < h && (esDivisor n d == True) = d : divisoresPropiosAux n (d+1) h
+    | otherwise = divisoresPropiosAux n (d+1) h
+
+divisoresPropios :: Integer -> [Integer]
+divisoresPropios n = divisoresPropiosAux n 1 (n-1)
+
+
+
+---- ejercicio 2 ----
+
+perteneceMateria :: String -> [String] -> Bool
+perteneceMateria _ [] = False
+perteneceMateria materia (x:xs)
+    | materia == x = True
+    | otherwise = perteneceMateria materia xs
+
+eliminarMateriaRepe :: [String] -> [String]
+eliminarMateriaRepe [] = []
+eliminarMateriaRepe (x:xs) 
+    | not (perteneceMateria x xs) = x : eliminarMateriaRepe xs
+    | otherwise = eliminarMateriaRepe xs
+
+reverso :: [String] -> [String]
+reverso [] = []
+reverso (x:xs) = reverso xs ++ [x]
+
+materiasComisionN :: [(String, String, Integer, Integer)] -> Integer -> Integer -> [String]
+materiasComisionN [] _ _ = []
+materiasComisionN((m,d,i,f):xs) inicio fin
+    | inicio > fin = []
+    | (inicio >= i) &&  (fin <= f) = eliminarMateriaRepe(m : materiasComisionN xs inicio fin)
+    | otherwise = materiasComisionN xs inicio fin
+
+
+
+---- ejercicio 3 -----
+
+sumaNotas :: [Integer] -> Integer
+sumaNotas [] = 0
+sumaNotas (x:xs) = x + sumaNotas xs
+
+
+longitudNotas :: [Integer] -> Integer
+longitudNotas [] = 0
+longitudNotas (x:xs) = 1 + longitudNotas xs
+
+promedioNotas :: [Integer] -> Float
+promedioNotas [] = 0.0
+promedioNotas (x:xs) = fromIntegral(sumaNotas (x:xs)) / fromIntegral(longitudNotas (x:xs))
+
+
+mejorPromedio :: [([Char], [Integer])] -> [Char]
+mejorPromedio [] = []
+mejorPromedio [(a,n)] = a
+mejorPromedio ((a1,n1):(a2,n2):xs) 
+    | promedioNotas n1 > promedioNotas n2 = mejorPromedio((a1,n1):xs)
+    | promedioNotas n1 < promedioNotas n2 = mejorPromedio((a2,n2):xs)
+    | promedioNotas n1 ==promedioNotas n2  = mejorPromedio((a1,n1):xs)
